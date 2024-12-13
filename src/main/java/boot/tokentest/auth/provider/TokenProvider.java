@@ -1,6 +1,7 @@
 package boot.tokentest.auth.provider;
 
 import javax.crypto.SecretKey;
+import java.util.Date;
 
 public interface TokenProvider {
 
@@ -8,7 +9,7 @@ public interface TokenProvider {
 
     String extractJti(final String token);
 
-    String extractExpiration(final String token);
+    Date extractExpiration(final String token);
 
-    String createToken(String id, SecretKey secretKey);
+    String createToken(String id);
 }

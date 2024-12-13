@@ -14,7 +14,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public String createToken(@RequestBody LoginRequestDto tokenRequest) {
-        return authService.login(tokenRequest);
+    public String createToken(@RequestBody LoginRequestDto loginRequestDto) {
+        return authService.login(loginRequestDto);
     }
 }

@@ -1,9 +1,9 @@
 package boot.tokentest.auth.provider;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.util.Date;
 import java.util.UUID;
@@ -11,30 +11,39 @@ import java.util.UUID;
 @Component
 public class JjwtTokenProvider implements TokenProvider {
 
+    private final KeyProvider keyProvider;
+
+    public JjwtTokenProvider(final KeyProvider keyProvider) {
+        this.keyProvider = keyProvider;
+    }
 
     @Override
     public String extractMemberEmail(final String token) {
-        return "";
+        return extractClaims(token).getSubject();
     }
 
     @Override
     public String extractJti(final String token) {
-        return "";
+        return extractClaims(token).getId();
     }
 
     @Override
-    public String extractExpiration(final String token) {
-        return "";
+    public Date extractExpiration(final String token) {
+        return extractClaims(token).getExpiration();
+    }
+
+    private Claims extractClaims(final String token) {
+        return Jwts.parser().verifyWith(keyProvider.getSecretKey()).build().parseSignedClaims(token).getPayload();
     }
 
     @Override
-    public String createToken(final String id, final SecretKey secretKey) {
+    public String createToken(final String id) {
         return Jwts.builder()
-                .setSubject(id)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Duration.ofHours(1).toMillis()))
-                .setId(UUID.randomUUID().toString())
-                .signWith(secretKey)
+                .subject(id)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + Duration.ofMinutes(5).toMillis()))
+                .id(UUID.randomUUID().toString())
+                .signWith(keyProvider.getSecretKey())
                 .compact();
     }
 }
