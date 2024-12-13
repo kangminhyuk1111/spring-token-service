@@ -1,6 +1,5 @@
 package boot.tokentest.auth.provider;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 
 public interface TokenProvider {
