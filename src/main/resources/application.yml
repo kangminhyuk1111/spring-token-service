@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: "token-test"
+
+jwt:
+  secret-key: "1111111112222222222223333333333334444444444444aaaaaaaaaa"
