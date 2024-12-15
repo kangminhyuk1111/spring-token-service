@@ -1,5 +1,6 @@
 package boot.tokentest.auth.service;
 
+import boot.tokentest.auth.domain.AuthCredentials;
 import boot.tokentest.auth.dto.LoginRequestDto;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,11 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public String login(final LoginRequestDto tokenRequest) {
-        final String email = tokenRequest.getEmail();
-        return jwtService.createToken(email);
+    public AuthCredentials login(final String email, final String password) {
+        return jwtService.generateAuthCredentials(email, password);
+    }
+
+    public String getTokenInfo(final LoginRequestDto loginRequestDto) {
+        return jwtService.getTokenInfo(loginRequestDto.getEmail());
     }
 }

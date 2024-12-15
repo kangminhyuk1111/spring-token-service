@@ -3,4 +3,4 @@ spring:
     name: "token-test"
 
 jwt:
-  secret-key: "1111111112222222222223333333333334444444444444aaaaaaaaaa"
+  secret-key: "1q2w3e4r5t6y7u8i9o0p1q2w3e4r5t6y7u8i9o0p"
