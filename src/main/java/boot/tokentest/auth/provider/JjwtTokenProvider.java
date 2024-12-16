@@ -1,15 +1,13 @@
 package boot.tokentest.auth.provider;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.Date;
-import java.util.UUID;
 
 @Component
-public class JjwtTokenProvider implements TokenProvider {
+public class JjwtTokenProvider implements TokenProvider{
 
     private final KeyProvider keyProvider;
 
@@ -18,31 +16,11 @@ public class JjwtTokenProvider implements TokenProvider {
     }
 
     @Override
-    public String extractMemberEmail(final String token) {
-        return extractClaims(token).getSubject();
-    }
-
-    @Override
-    public String extractJti(final String token) {
-        return extractClaims(token).getId();
-    }
-
-    @Override
-    public Date extractExpiration(final String token) {
-        return extractClaims(token).getExpiration();
-    }
-
-    private Claims extractClaims(final String token) {
-        return Jwts.parser().verifyWith(keyProvider.getSecretKey()).build().parseSignedClaims(token).getPayload();
-    }
-
-    @Override
-    public String createToken(final String id) {
+    public String createToken(final String email) {
         return Jwts.builder()
-                .subject(id)
-                .issuedAt(new Date(System.currentTimeMillis()))
+                .subject(email)
                 .expiration(new Date(System.currentTimeMillis() + Duration.ofMinutes(5).toMillis()))
-                .id(UUID.randomUUID().toString())
+                .issuedAt(new Date())
                 .signWith(keyProvider.getSecretKey())
                 .compact();
     }
