@@ -27,13 +27,17 @@ public class JwtRepository {
         return authCredential;
     }
 
+    public boolean isPresentJti(final String jti) {
+        return credentials.containsKey(jti);
+    }
+
     public void deleteByJti(final String jti) {
         credentials.remove(jti);
     }
 
-    public boolean isAccessTokenPresent(final String accessToken) {
-        System.out.println("accessToken: " + accessToken);
-        return credentials.values().stream()
-                .anyMatch(credential -> credential.accessToken().equals(accessToken));
+    public boolean isAccessTokenPresent(final String jti, final String accessToken) {
+        final AuthCredential authCredential = credentials.get(jti);
+
+        return authCredential.accessToken().equals(accessToken);
     }
 }

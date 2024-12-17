@@ -30,18 +30,10 @@ public class AuthController {
         authService.logout(logoutRequestDto);
     }
 
-    @GetMapping("/auth/{jti}")
-    public AuthCredential findByJti(@PathVariable("jti") GetCredentialRequestDto getCredentialRequestDto) {
-        return authService.findByJti(getCredentialRequestDto);
-    }
-
-    @PostMapping("/auth/accessToken")
-    public Claims tokenTest(@RequestBody() AuthDto authDto) {
-        return authService.extractJwt(authDto.getAccessToken());
-    }
-
-    @GetMapping("/auth/header-test")
-    public String authTest(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    @GetMapping("/auth/accessToken")
+    public String authTest(
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+            @RequestHeader(value = "jti", required = false) String jti) {
         return authorizationHeader;
     }
 }
