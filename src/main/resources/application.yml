@@ -4,3 +4,8 @@ spring:
 
 jwt:
   secret-key: "1q2w3e4r5t6y7u8i9o0p1q2w3e4r5t6y7u8i9o0p"
+
+  server:
+    error:
+      whitelabel:
+        enabled: false

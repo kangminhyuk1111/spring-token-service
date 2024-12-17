@@ -1,5 +1,7 @@
 package boot.tokentest.member.service;
 
+import boot.tokentest.global.exception.ApplicationException;
+import boot.tokentest.global.exception.ErrorCode;
 import boot.tokentest.member.domain.Member;
 import boot.tokentest.member.dto.MemberSignupRequestDto;
 import boot.tokentest.member.repository.MemberRepository;
@@ -23,14 +25,10 @@ public class MemberService {
         final String email = memberSignupRequestDto.getEmail();
 
         if(isMemberAlreadyExist(email)) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new ApplicationException(ErrorCode.MEMBER_ALREADY_EXIST);
         }
 
         return memberRepository.save(memberSignupRequestDto.toEntity(passwordEncoder));
-    }
-
-    public void delete(final Member member) {
-        memberRepository.delete(member);
     }
 
     public Member findByEmail(final String email) {

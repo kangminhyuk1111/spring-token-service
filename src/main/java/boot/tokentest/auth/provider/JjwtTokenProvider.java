@@ -1,5 +1,6 @@
 package boot.tokentest.auth.provider;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +17,37 @@ public class JjwtTokenProvider implements TokenProvider{
     }
 
     @Override
-    public String createToken(final String email) {
+    public String createToken(final String email, final String jti) {
         return Jwts.builder()
                 .subject(email)
+                .id(jti)
                 .expiration(new Date(System.currentTimeMillis() + Duration.ofMinutes(5).toMillis()))
                 .issuedAt(new Date())
                 .signWith(keyProvider.getSecretKey())
                 .compact();
+    }
+
+    @Override
+    public Claims extractClaimsFromToken(final String token) {
+        return Jwts.parser()
+                .verifyWith(keyProvider.getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    @Override
+    public String extractEmailFromClaims(final String token) {
+        return this.extractClaimsFromToken(token).getSubject();
+    }
+
+    @Override
+    public Date extractExpirationTimeFromClaims(final String token) {
+        return this.extractClaimsFromToken(token).getExpiration();
+    }
+
+    @Override
+    public String extractJtiFromClaims(final String token) {
+        return this.extractClaimsFromToken(token).getId();
     }
 }

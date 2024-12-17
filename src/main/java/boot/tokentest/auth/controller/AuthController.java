@@ -1,15 +1,15 @@
 package boot.tokentest.auth.controller;
 
 import boot.tokentest.auth.domain.AuthCredential;
+import boot.tokentest.auth.dto.AuthDto;
+import boot.tokentest.auth.dto.GetCredentialRequestDto;
 import boot.tokentest.auth.dto.LoginRequestDto;
+import boot.tokentest.auth.dto.LogoutRequestDto;
+import boot.tokentest.auth.filter.JwtAuthenticationFilter;
 import boot.tokentest.auth.service.AuthService;
-import boot.tokentest.member.domain.Member;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import io.jsonwebtoken.Claims;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 public class AuthController {
@@ -25,8 +25,23 @@ public class AuthController {
         return authService.login(loginRequestDto);
     }
 
-    @GetMapping("/auth/test")
-    public Map<String, AuthCredential> getAuthService() {
-        return authService.getCredentials();
+    @PostMapping("/auth/logout")
+    public void logout(@RequestBody LogoutRequestDto logoutRequestDto) {
+        authService.logout(logoutRequestDto);
+    }
+
+    @GetMapping("/auth/{jti}")
+    public AuthCredential findByJti(@PathVariable("jti") GetCredentialRequestDto getCredentialRequestDto) {
+        return authService.findByJti(getCredentialRequestDto);
+    }
+
+    @PostMapping("/auth/accessToken")
+    public Claims tokenTest(@RequestBody() AuthDto authDto) {
+        return authService.extractJwt(authDto.getAccessToken());
+    }
+
+    @GetMapping("/auth/header-test")
+    public String authTest(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        return authorizationHeader;
     }
 }

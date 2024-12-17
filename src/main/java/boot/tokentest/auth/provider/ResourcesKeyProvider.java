@@ -1,5 +1,7 @@
 package boot.tokentest.auth.provider;
 
+import boot.tokentest.global.exception.ApplicationException;
+import boot.tokentest.global.exception.ErrorCode;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,7 @@ public class ResourcesKeyProvider implements KeyProvider {
     @Override
     public SecretKey getSecretKey() {
         if (key == null) {
-            throw new IllegalStateException("Key is not initialized");
+            throw new ApplicationException(ErrorCode.KEY_NOT_INITIALIZED);
         }
         return Keys.hmacShaKeyFor(key.getBytes());
     }

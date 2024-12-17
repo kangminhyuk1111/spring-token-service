@@ -1,6 +1,8 @@
 package boot.tokentest.auth.repository;
 
 import boot.tokentest.auth.domain.AuthCredential;
+import boot.tokentest.global.exception.ApplicationException;
+import boot.tokentest.global.exception.ErrorCode;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -15,11 +17,23 @@ public class JwtRepository {
         credentials.put(credential.jti(), credential);
     }
 
-    public AuthCredential getCredential(final String jti) {
-        return credentials.get(jti);
+    public AuthCredential findByJti(final String jti) {
+        final AuthCredential authCredential = credentials.get(jti);
+
+        if (authCredential == null) {
+            throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return authCredential;
     }
 
-    public Map<String, AuthCredential> getCredentials() {
-        return credentials;
+    public void deleteByJti(final String jti) {
+        credentials.remove(jti);
+    }
+
+    public boolean isAccessTokenPresent(final String accessToken) {
+        System.out.println("accessToken: " + accessToken);
+        return credentials.values().stream()
+                .anyMatch(credential -> credential.accessToken().equals(accessToken));
     }
 }

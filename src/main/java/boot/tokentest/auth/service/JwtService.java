@@ -3,6 +3,7 @@ package boot.tokentest.auth.service;
 import boot.tokentest.auth.domain.AuthCredential;
 import boot.tokentest.auth.provider.TokenProvider;
 import boot.tokentest.auth.repository.JwtRepository;
+import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -21,13 +22,17 @@ public class JwtService {
     public AuthCredential generateAuthCredential(final String email) {
         final String jti = UUID.randomUUID().toString();
 
-        final String accessToken = tokenProvider.createToken(email);
-        final String refreshToken = tokenProvider.createToken(email);
+        final String accessToken = tokenProvider.createToken(email, jti);
+        final String refreshToken = tokenProvider.createToken(email, jti);
 
         final AuthCredential authCredential = new AuthCredential(jti, accessToken, refreshToken);
 
         jwtRepository.saveCredential(authCredential);
 
         return authCredential;
+    }
+
+    public Claims extractClaimsFromToken(final String accessToken) {
+        return tokenProvider.extractClaimsFromToken(accessToken);
     }
 }
