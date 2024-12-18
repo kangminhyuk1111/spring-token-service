@@ -32,7 +32,7 @@ public class AuthService {
 
         final Member member = memberService.findByEmail(email);
 
-        final boolean matches = passwordService.matches(password, member.getPassword());
+        final boolean matches = passwordService.matches(password, member.password().getPassword());
 
         if (!matches) {
             throw new ApplicationException(ErrorCode.PASSWORD_NOT_MATCHES);

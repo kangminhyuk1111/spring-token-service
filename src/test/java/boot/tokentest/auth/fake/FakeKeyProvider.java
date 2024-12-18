@@ -5,16 +5,10 @@ import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 
-public class TestKeyProvider implements KeyProvider {
-
-    private final String key;
-
-    public TestKeyProvider(final String key) {
-        this.key = key;
-    }
+public class FakeKeyProvider implements KeyProvider {
 
     @Override
     public SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(key.getBytes());
+        return Keys.hmacShaKeyFor("1q2w3e4r5t6y7u8i9o0p1q2w3e4r5t6y7u8i9o0p".getBytes());
     }
 }

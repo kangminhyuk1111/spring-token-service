@@ -15,6 +15,7 @@ public class WhiteListUrl {
         allowUriList = new HashMap<>();
         allowUriList.put("/member", HttpMethod.POST);
         allowUriList.put("/auth", HttpMethod.POST);
+        allowUriList.put("/auth/login", HttpMethod.POST);
         allowUriList.put("/auth/accessToken", HttpMethod.POST);
     }
 

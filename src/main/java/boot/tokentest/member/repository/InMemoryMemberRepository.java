@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MemberRepositoryImpl implements MemberRepository{
+public class InMemoryMemberRepository implements MemberRepository{
 
     private final List<Member> members = new ArrayList<>();
 
@@ -27,7 +27,7 @@ public class MemberRepositoryImpl implements MemberRepository{
     @Override
     public Member findByEmail(final String email) {
         return members.stream()
-                .filter(member -> member.getEmail().equals(email))
+                .filter(member -> member.email().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_USER));
     }
@@ -39,6 +39,6 @@ public class MemberRepositoryImpl implements MemberRepository{
 
     @Override
     public boolean existsByEmail(final String email) {
-        return members.stream().anyMatch(member -> member.getEmail().equals(email));
+        return members.stream().anyMatch(member -> member.email().equals(email));
     }
 }

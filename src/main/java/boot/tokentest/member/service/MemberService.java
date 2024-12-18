@@ -21,14 +21,16 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Member signup(final MemberSignupRequestDto memberSignupRequestDto) {
+    public String signup(final MemberSignupRequestDto memberSignupRequestDto) {
         final String email = memberSignupRequestDto.getEmail();
 
         if(memberRepository.existsByEmail(email)) {
             throw new ApplicationException(ErrorCode.MEMBER_ALREADY_EXIST);
         }
 
-        return memberRepository.save(memberSignupRequestDto.toEntity(passwordEncoder));
+        final Member member = memberRepository.save(memberSignupRequestDto.toEntity(passwordEncoder));
+
+        return member.email();
     }
 
     public Member findByEmail(final String email) {

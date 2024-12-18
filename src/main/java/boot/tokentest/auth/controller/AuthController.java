@@ -17,7 +17,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping()
+    @PostMapping("/login")
     public AuthCredential login(@RequestBody LoginRequestDto loginRequestDto) {
         return authService.login(loginRequestDto);
     }

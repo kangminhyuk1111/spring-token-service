@@ -73,3 +73,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+
+// 1. 로그인
+// 2. accessToken 발급
+// 3. header에 jti와 accessToken을 가지고 로그인 요청
+// 4. accessToken이 유효하면 filter 성공
+// 5. accessToken이 유효하지 않으면 refreshToken을 요구

@@ -1,6 +1,7 @@
 package boot.tokentest.member.dto;
 
 import boot.tokentest.member.domain.Member;
+import boot.tokentest.member.vo.Password;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MemberSignupRequestDto {
@@ -31,6 +32,6 @@ public class MemberSignupRequestDto {
     }
 
     public Member toEntity(PasswordEncoder passwordEncoder) {
-        return new Member(username, email, passwordEncoder.encode(password));
+        return new Member(username, email, new Password(passwordEncoder, password));
     }
 }

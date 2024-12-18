@@ -4,7 +4,6 @@ import boot.tokentest.auth.domain.AuthCredential;
 import boot.tokentest.auth.provider.JtiProvider;
 import boot.tokentest.auth.provider.TokenProvider;
 import boot.tokentest.auth.repository.JwtRepository;
-import boot.tokentest.member.domain.Member;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +48,6 @@ public class JwtService {
     }
 
     public boolean isTokenActive(final String token) {
-        return tokenProvider.extractExpirationTimeFromClaims(token).after(new Date());
+        return tokenProvider.extractExpirationTimeFromToken(token).after(new Date());
     }
 }

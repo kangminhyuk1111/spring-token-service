@@ -1,8 +1,11 @@
 package boot.tokentest.member.controller;
 
+import boot.tokentest.global.common.response.BaseResponse;
 import boot.tokentest.member.domain.Member;
 import boot.tokentest.member.dto.MemberSignupRequestDto;
 import boot.tokentest.member.service.MemberService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +21,14 @@ public class MemberController {
     }
 
     @GetMapping()
-    public List<Member> findAll() {
-        return memberService.findAll();
+    public ResponseEntity<List<Member>> findAll() {
+        List<Member> members = memberService.findAll();
+        return new ResponseEntity<>(members, HttpStatus.OK) ;
     }
 
     @PostMapping()
-    public Member save(@RequestBody final MemberSignupRequestDto memberSignupRequestDto) {
-        return memberService.signup(memberSignupRequestDto);
+    public BaseResponse<String> save(@RequestBody final MemberSignupRequestDto memberSignupRequestDto) {
+        final String email = memberService.signup(memberSignupRequestDto);
+        return new BaseResponse<>(HttpStatus.OK, "success", email);
     }
 }

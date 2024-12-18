@@ -10,9 +10,9 @@ public interface TokenProvider {
 
     Claims extractClaimsFromToken(String accessToken);
 
-    String extractEmailFromClaims(String accessToken);
+    String extractEmailFromToken(String accessToken);
 
-    Date extractExpirationTimeFromClaims(String accessToken);
+    Date extractExpirationTimeFromToken(String accessToken);
 
-    String extractJtiFromClaims(String accessToken);
+    String extractJtiFromToken(String accessToken);
 }

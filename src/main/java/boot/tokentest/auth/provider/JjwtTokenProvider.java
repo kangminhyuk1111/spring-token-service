@@ -37,17 +37,17 @@ public class JjwtTokenProvider implements TokenProvider{
     }
 
     @Override
-    public String extractEmailFromClaims(final String token) {
+    public String extractEmailFromToken(final String token) {
         return this.extractClaimsFromToken(token).getSubject();
     }
 
     @Override
-    public Date extractExpirationTimeFromClaims(final String token) {
+    public Date extractExpirationTimeFromToken(final String token) {
         return this.extractClaimsFromToken(token).getExpiration();
     }
 
     @Override
-    public String extractJtiFromClaims(final String token) {
+    public String extractJtiFromToken(final String token) {
         return this.extractClaimsFromToken(token).getId();
     }
 }
