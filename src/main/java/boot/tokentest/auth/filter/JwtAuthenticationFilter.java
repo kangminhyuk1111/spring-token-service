@@ -56,11 +56,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 4. jti가 유효한지 검사
         if (!jwtRepository.isPresentJti(jti)) {
-            throw new ApplicationException(ErrorCode.TOKEN_NOT_FOUND);
+            throw new ApplicationException(ErrorCode.JTI_NOT_FOUND);
         }
 
         // 5. 토큰이 만료되었는지 확인. 만료시, refreshToken을 통한 토큰 재발급 구현
-        if (!jwtService.isTokenActive(authToken)) {
+        if (!jwtService.isTokenActive(accessToken)) {
             // TODO refresh 로직 추가
             throw new ApplicationException(ErrorCode.UNAUTHORIZED);
         };

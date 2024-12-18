@@ -1,5 +1,7 @@
 package boot.tokentest.member.repository;
 
+import boot.tokentest.global.exception.ApplicationException;
+import boot.tokentest.global.exception.ErrorCode;
 import boot.tokentest.member.domain.Member;
 import org.springframework.stereotype.Repository;
 
@@ -24,11 +26,19 @@ public class MemberRepositoryImpl implements MemberRepository{
 
     @Override
     public Member findByEmail(final String email) {
-        return members.stream().filter(member -> member.getEmail().equals(email)).findFirst().orElse(null);
+        return members.stream()
+                .filter(member -> member.getEmail().equals(email))
+                .findFirst()
+                .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_USER));
     }
 
     @Override
     public List<Member> findAll() {
         return members;
+    }
+
+    @Override
+    public boolean existsByEmail(final String email) {
+        return members.stream().anyMatch(member -> member.getEmail().equals(email));
     }
 }

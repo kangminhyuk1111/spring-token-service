@@ -10,7 +10,9 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않은 유저입니다."),
     KEY_NOT_INITIALIZED(HttpStatus.NOT_FOUND, "시크릿 키를 찾을 수 없습니다."),
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않거나 형식이 잘못되었습니다."),
-    JTI_NOT_FOUND(HttpStatus.NOT_FOUND, "jti 토큰을 찾을 수 없습니다.");
+    JTI_NOT_FOUND(HttpStatus.NOT_FOUND, "jti 토큰을 찾을 수 없습니다."),
+    REFRESH_NOT_FOUND(HttpStatus.NOT_FOUND, "refresh token을 찾을 수 없습니다."),
+    NOT_FOUND_EMAIL(HttpStatus.NOT_FOUND, "존재하지 않는 이메일입니다.");
 
     private HttpStatus status;
     private String message;

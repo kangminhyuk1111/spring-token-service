@@ -10,7 +10,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(ApplicationException e) {
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.NOT_FOUND_USER);
+        final ErrorCode errorCode = e.getErrorCode();
+        final ErrorResponse response = ErrorResponse.of(errorCode);
         return new ResponseEntity<>(response, response.getStatus());
     }
 }

@@ -24,7 +24,7 @@ public class MemberService {
     public Member signup(final MemberSignupRequestDto memberSignupRequestDto) {
         final String email = memberSignupRequestDto.getEmail();
 
-        if(isMemberAlreadyExist(email)) {
+        if(memberRepository.existsByEmail(email)) {
             throw new ApplicationException(ErrorCode.MEMBER_ALREADY_EXIST);
         }
 
@@ -37,11 +37,5 @@ public class MemberService {
 
     public List<Member> findAll() {
         return memberRepository.findAll();
-    }
-
-    private boolean isMemberAlreadyExist(final String email) {
-        final Member member = memberRepository.findByEmail(email);
-
-        return member != null;
     }
 }
