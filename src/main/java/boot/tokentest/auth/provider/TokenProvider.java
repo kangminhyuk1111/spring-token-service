@@ -8,11 +8,11 @@ public interface TokenProvider {
 
     String createToken(String email, String jti);
 
-    Claims extractClaimsFromToken(String accessToken);
+    Claims extractClaimsFromToken(String token);
 
-    String extractEmailFromToken(String accessToken);
+    String extractEmailFromToken(String token);
 
-    Date extractExpirationTimeFromToken(String accessToken);
+    Date extractExpirationTimeFromToken(String token);
 
-    String extractJtiFromToken(String accessToken);
+    String extractJtiFromToken(String token);
 }

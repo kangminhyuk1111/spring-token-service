@@ -1,5 +1,6 @@
 package boot.tokentest.auth.filter;
 
+import boot.tokentest.auth.filter.url.AccessUri;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +14,10 @@ public class WhiteListUrl {
 
     public WhiteListUrl() {
         allowUriList = new HashMap<>();
-        allowUriList.put("/member", HttpMethod.POST);
-        allowUriList.put("/auth", HttpMethod.POST);
-        allowUriList.put("/auth/login", HttpMethod.POST);
-        allowUriList.put("/auth/accessToken", HttpMethod.POST);
+        allowUriList.put(AccessUri.MEMBER_GET.getUri(), AccessUri.MEMBER_GET.getMethod());
+        allowUriList.put(AccessUri.MEMBER_POST.getUri(), AccessUri.MEMBER_POST.getMethod());
+        allowUriList.put(AccessUri.AUTH.getUri(), AccessUri.AUTH.getMethod());
+        allowUriList.put(AccessUri.LOGIN.getUri(), AccessUri.LOGIN.getMethod());
     }
 
     public boolean isAvailableUri(String uri, HttpMethod httpMethod) {

@@ -3,6 +3,7 @@ package boot.tokentest.auth.controller;
 import boot.tokentest.auth.domain.AuthCredential;
 import boot.tokentest.auth.dto.LoginRequestDto;
 import boot.tokentest.auth.dto.LogoutRequestDto;
+import boot.tokentest.auth.dto.RefreshTokenDto;
 import boot.tokentest.auth.service.AuthService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,5 +26,10 @@ public class AuthController {
     @PostMapping("/logout")
     public void logout(@RequestBody LogoutRequestDto logoutRequestDto) {
         authService.logout(logoutRequestDto);
+    }
+
+    @PostMapping("/refresh-token")
+    public AuthCredential refreshToken(@RequestBody() RefreshTokenDto refreshTokenDto) {
+        return authService.refreshToken(refreshTokenDto);
     }
 }

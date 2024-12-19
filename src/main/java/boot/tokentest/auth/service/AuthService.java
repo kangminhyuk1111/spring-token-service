@@ -3,6 +3,7 @@ package boot.tokentest.auth.service;
 import boot.tokentest.auth.domain.AuthCredential;
 import boot.tokentest.auth.dto.LoginRequestDto;
 import boot.tokentest.auth.dto.LogoutRequestDto;
+import boot.tokentest.auth.dto.RefreshTokenDto;
 import boot.tokentest.auth.repository.JwtRepository;
 import boot.tokentest.global.exception.ApplicationException;
 import boot.tokentest.global.exception.ErrorCode;
@@ -27,18 +28,18 @@ public class AuthService {
     }
 
     public AuthCredential login(final LoginRequestDto loginRequestDto) {
-        final String email = loginRequestDto.getEmail();
-        final String password = loginRequestDto.getPassword();
-
-        final Member member = memberService.findByEmail(email);
-
-        final boolean matches = passwordService.matches(password, member.password().getPassword());
+        final Member member = memberService.findByEmail(loginRequestDto.getEmail());
+        final boolean matches = passwordService.matches(loginRequestDto.getPassword(), member.password().getPassword());
 
         if (!matches) {
             throw new ApplicationException(ErrorCode.PASSWORD_NOT_MATCHES);
         }
 
-        return jwtService.generateAuthCredential(email);
+        return jwtService.generateAuthCredential(member.email());
+    }
+
+    public AuthCredential refreshToken(final RefreshTokenDto refreshTokenDto) {
+        return jwtService.refreshToken(refreshTokenDto.refreshToken());
     }
 
     public void logout(final LogoutRequestDto logoutRequestDto) {

@@ -1,6 +1,5 @@
 package boot.tokentest.member.controller;
 
-import boot.tokentest.global.common.response.BaseResponse;
 import boot.tokentest.member.domain.Member;
 import boot.tokentest.member.dto.MemberSignupRequestDto;
 import boot.tokentest.member.service.MemberService;
@@ -27,8 +26,8 @@ public class MemberController {
     }
 
     @PostMapping()
-    public BaseResponse<String> save(@RequestBody final MemberSignupRequestDto memberSignupRequestDto) {
+    public ResponseEntity<String> save(@RequestBody final MemberSignupRequestDto memberSignupRequestDto) {
         final String email = memberService.signup(memberSignupRequestDto);
-        return new BaseResponse<>(HttpStatus.OK, "success", email);
+        return new ResponseEntity<>(email, HttpStatus.OK);
     }
 }

@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.util.Date;
 
 @Component
@@ -21,7 +20,7 @@ public class JjwtTokenProvider implements TokenProvider{
         return Jwts.builder()
                 .subject(email)
                 .id(jti)
-                .expiration(new Date(System.currentTimeMillis() + Duration.ofMinutes(5).toMillis()))
+                .expiration(keyProvider.getExpiration())
                 .issuedAt(new Date())
                 .signWith(keyProvider.getSecretKey())
                 .compact();

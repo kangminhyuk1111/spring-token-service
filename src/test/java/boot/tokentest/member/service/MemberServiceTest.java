@@ -20,10 +20,10 @@ class MemberServiceTest {
         final MemberSignupRequestDto memberSignupRequestDto = new MemberSignupRequestDto("test1234", "test1234@gmail.com", "testpassword1");
 
         // when
-        final Member member = memberService.signup(memberSignupRequestDto);
+        final String email = memberService.signup(memberSignupRequestDto);
 
         // then
-        assertThat(member).isNotNull();
+        assertThat(email).isNotNull();
     }
 
     @Test
@@ -43,13 +43,13 @@ class MemberServiceTest {
     void 이메일을_키로_멤버검색() {
         // given
         final MemberSignupRequestDto memberSignupRequestDto = new MemberSignupRequestDto("test1234", "test1234@gmail.com", "testpassword1");
-        final Member member = memberService.signup(memberSignupRequestDto);
+        final String email = memberService.signup(memberSignupRequestDto);
 
         // when
-        final Member findByEmail = memberService.findByEmail(member.email());
+        final Member findByEmail = memberService.findByEmail(email);
 
         // then
-        assertThat(findByEmail).isEqualTo(member);
+        assertThat(findByEmail.email()).isEqualTo(email);
     }
 
     @Test
