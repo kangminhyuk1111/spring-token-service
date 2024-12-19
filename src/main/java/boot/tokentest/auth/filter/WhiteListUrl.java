@@ -14,13 +14,18 @@ public class WhiteListUrl {
 
     public WhiteListUrl() {
         allowUriList = new HashMap<>();
-        allowUriList.put(AccessUri.MEMBER_GET.getUri(), AccessUri.MEMBER_GET.getMethod());
-        allowUriList.put(AccessUri.MEMBER_POST.getUri(), AccessUri.MEMBER_POST.getMethod());
-        allowUriList.put(AccessUri.AUTH.getUri(), AccessUri.AUTH.getMethod());
-        allowUriList.put(AccessUri.LOGIN.getUri(), AccessUri.LOGIN.getMethod());
+        allowUriList.put(AccessUri.MEMBER_GET.getUriPattern(), AccessUri.MEMBER_GET.getMethod());
+        allowUriList.put(AccessUri.MEMBER_POST.getUriPattern(), AccessUri.MEMBER_POST.getMethod());
+        allowUriList.put(AccessUri.AUTH.getUriPattern(), AccessUri.AUTH.getMethod());
+        allowUriList.put(AccessUri.LOGIN.getUriPattern(), AccessUri.LOGIN.getMethod());
     }
 
-    public boolean isAvailableUri(String uri, HttpMethod httpMethod) {
-        return allowUriList.containsKey(uri) && allowUriList.get(uri).equals(httpMethod);
+    public boolean isAvailableUri(String uri, HttpMethod method) {
+        for (AccessUri accessUri : AccessUri.values()) {
+            if (accessUri.matches(uri, method)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

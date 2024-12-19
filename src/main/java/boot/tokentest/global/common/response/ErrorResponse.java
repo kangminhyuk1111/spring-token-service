@@ -13,6 +13,11 @@ public class ErrorResponse {
         this.status = errorCode.getStatus();
     }
 
+    public ErrorResponse(String message, HttpStatus status) {
+        this.message = message;
+        this.status = status;
+    }
+
     public static ErrorResponse of(ErrorCode errorCode) {
         return new ErrorResponse(errorCode);
     }

@@ -31,6 +31,9 @@ dependencies {
 
     // password encoder
     implementation("org.springframework.security:spring-security-crypto")
+
+    // swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }
 
 tasks.withType<Test> {

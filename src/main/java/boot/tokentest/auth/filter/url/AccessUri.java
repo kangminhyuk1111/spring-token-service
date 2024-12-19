@@ -9,19 +9,23 @@ public enum AccessUri {
     AUTH("/auth", HttpMethod.POST),
     LOGIN("/auth/login", HttpMethod.POST);
 
-    private final String uri;
+    private final String uriPattern;
     private final HttpMethod method;
 
-    AccessUri(final String uri, final HttpMethod method) {
-        this.uri = uri;
+    AccessUri(final String uriPattern, final HttpMethod method) {
+        this.uriPattern = uriPattern;
         this.method = method;
     }
 
-    public String getUri() {
-        return uri;
+    public String getUriPattern() {
+        return uriPattern;
     }
 
     public HttpMethod getMethod() {
         return method;
+    }
+
+    public boolean matches(String uri, HttpMethod method) {
+        return uri.matches(uriPattern) && this.method == method;
     }
 }

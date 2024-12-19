@@ -52,9 +52,7 @@ class JwtServiceTest {
         // then
         assertAll(
                 () -> assertThat(refreshAuthCredential).isNotNull(),
-                () -> assertThat(refreshAuthCredential.accessToken()).isNotEmpty(),
                 () -> assertThat(refreshAuthCredential.accessToken()).isEqualTo(refreshToken),
-                () -> assertThat(refreshAuthCredential.refreshToken()).isNotEmpty(),
                 () -> assertThat(refreshAuthCredential.refreshToken()).isEqualTo(refreshToken)
         );
     }

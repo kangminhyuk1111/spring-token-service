@@ -9,7 +9,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,6 +20,8 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final static Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     public static final String AUTHORIZATION_KEY = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
@@ -50,24 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             validateTokenEqualsFoundToken(accessToken);
 
             filterChain.doFilter(request, response);
-        } catch (ApplicationException e) {
-            handleException(response, e);
-        }
-    }
-
-    private void handleException(HttpServletResponse response, ApplicationException e) {
-        try {
-            ErrorCode errorCode = e.getErrorCode();
-            ErrorResponse errorResponse = ErrorResponse.of(errorCode);
-
-            response.setStatus(errorCode.getStatus().value());
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            String jsonResponse = new ObjectMapper().writeValueAsString(errorResponse);
-            response.getWriter().write(jsonResponse);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
