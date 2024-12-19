@@ -1,7 +1,5 @@
 package boot.tokentest.auth.filter;
 
-import boot.tokentest.auth.provider.TokenProvider;
-import boot.tokentest.auth.repository.JwtRepository;
 import boot.tokentest.auth.service.JwtService;
 import boot.tokentest.global.common.response.ErrorResponse;
 import boot.tokentest.global.exception.ApplicationException;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -24,14 +21,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION_KEY = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
 
-    private final TokenProvider tokenProvider;
-    private final JwtRepository jwtRepository;
     private final WhiteListUrl whiteListUrl;
     private final JwtService jwtService;
 
-    public JwtAuthenticationFilter(final TokenProvider tokenProvider, final JwtRepository jwtRepository, final WhiteListUrl whiteListUrl, final JwtService jwtService) {
-        this.tokenProvider = tokenProvider;
-        this.jwtRepository = jwtRepository;
+    public JwtAuthenticationFilter(final WhiteListUrl whiteListUrl, final JwtService jwtService) {
         this.whiteListUrl = whiteListUrl;
         this.jwtService = jwtService;
     }
@@ -51,11 +44,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             validateAuthToken(authToken);
 
             final String accessToken = authToken.substring(7);
-            final String jti = tokenProvider.extractJtiFromToken(accessToken);
 
-            validateJti(jti);
+            validateJti(accessToken);
             validateTokenActive(accessToken);
-            validateTokenEqualsFoundToken(jti, accessToken);
+            validateTokenEqualsFoundToken(accessToken);
 
             filterChain.doFilter(request, response);
         } catch (ApplicationException e) {
@@ -79,8 +71,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void validateTokenEqualsFoundToken(final String jti, final String accessToken) {
-        if (!jwtRepository.isAccessTokenPresent(jti, accessToken)) {
+    private void validateTokenEqualsFoundToken(final String accessToken) {
+        if (!jwtService.isAccessTokenPresent(accessToken)) {
             throw new ApplicationException(ErrorCode.UNAUTHORIZED);
         }
     }
@@ -91,8 +83,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void validateJti(final String jti) {
-        if (!jwtRepository.isPresentJti(jti)) {
+    private void validateJti(final String token) {
+        if (!jwtService.isPresentJti(token)) {
             throw new ApplicationException(ErrorCode.JTI_NOT_FOUND);
         }
     }

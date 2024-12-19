@@ -36,10 +36,4 @@ public class JwtRepository {
     public void deleteByJti(final String jti) {
         credentials.remove(jti);
     }
-
-    public boolean isAccessTokenPresent(final String jti, final String accessToken) {
-        final AuthCredential authCredential = credentials.get(jti);
-
-        return authCredential.accessToken().equals(accessToken);
-    }
 }

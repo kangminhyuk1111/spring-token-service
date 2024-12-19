@@ -58,6 +58,22 @@ public class JwtService {
         return refreshAuthCredential;
     }
 
+    public boolean isTokenActive(final String token) {
+        return tokenProvider.extractExpirationTimeFromToken(token).after(new Date());
+    }
+
+    public boolean isAccessTokenPresent(final String accessToken) {
+        final String jti = tokenProvider.extractJtiFromToken(accessToken);
+        final AuthCredential authCredential = jwtRepository.findByJti(jti);
+
+        return authCredential.accessToken().equals(accessToken);
+    }
+
+    public boolean isPresentJti(final String token) {
+        final String jti = tokenProvider.extractJtiFromToken(token);
+        return jwtRepository.isPresentJti(jti);
+    }
+
     private void validateRefreshToken(final String refreshToken, final AuthCredential foundAuthCredential) {
         if(!foundAuthCredential.refreshToken().equals(refreshToken)) {
             throw new ApplicationException(ErrorCode.REFRESH_NOT_FOUND);
@@ -70,9 +86,5 @@ public class JwtService {
 
     private String generateRefreshToken(final String email, final String jti) {
         return tokenProvider.createToken(email, jti);
-    }
-
-    public boolean isTokenActive(final String token) {
-        return tokenProvider.extractExpirationTimeFromToken(token).after(new Date());
     }
 }
