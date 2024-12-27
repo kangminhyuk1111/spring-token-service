@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Password {
 
     private static final Pattern PASSOWRD_PATTERN =
-            Pattern.compile("^[A-Za-z0-9]{4,16}$");
+            Pattern.compile("^(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z0-9!@#$%^&*(),.?\":{}|<>]{4,16}$");
 
     private String password;
 
@@ -18,8 +18,12 @@ public class Password {
         this.password = passwordEncoder.encode(password);
     }
 
-    private static void validatePassword(final String password) {
-        if (password == null || !PASSOWRD_PATTERN.matcher(password).matches()) {
+    private void validatePassword(final String password) {
+        if (password == null || password.isBlank()) {
+            throw new ApplicationException(ErrorCode.PASSWORD_VALID_EXCEPTION);
+        }
+
+        if (!PASSOWRD_PATTERN.matcher(password).matches()) {
             throw new ApplicationException(ErrorCode.PASSWORD_VALID_EXCEPTION);
         }
     }

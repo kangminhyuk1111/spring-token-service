@@ -10,11 +10,8 @@ import boot.tokentest.auth.provider.TokenProvider;
 import boot.tokentest.auth.repository.JwtRepository;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 class JwtServiceTest {
 

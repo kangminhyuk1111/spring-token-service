@@ -6,7 +6,6 @@ import boot.tokentest.global.exception.ApplicationException;
 import boot.tokentest.global.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -18,24 +17,29 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final static Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     public static final String AUTHORIZATION_KEY = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final String CONTENT_TYPE = "application/json";
+    public static final String CHARACTER_ENCODING = "UTF-8";
 
     private final WhiteListUrl whiteListUrl;
     private final JwtService jwtService;
+    private final ObjectMapper objectMapper;
 
-    public JwtAuthenticationFilter(final WhiteListUrl whiteListUrl, final JwtService jwtService) {
+    public JwtAuthenticationFilter(final WhiteListUrl whiteListUrl, final JwtService jwtService, final ObjectMapper objectMapper) {
         this.whiteListUrl = whiteListUrl;
         this.jwtService = jwtService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) {
         try {
             final String authToken = request.getHeader(AUTHORIZATION_KEY);
             final String uri = request.getRequestURI();
@@ -56,7 +60,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            handleException(response, new ApplicationException(ErrorCode.UNAUTHORIZED));
+        }
+    }
+
+    private void handleException(HttpServletResponse response, ApplicationException e) {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(CONTENT_TYPE);
+        response.setCharacterEncoding(CHARACTER_ENCODING);
+
+        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode().getMessage(), e.getErrorCode().getStatus());
+
+        try {
+            String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+            response.getWriter().write(jsonResponse);
+        } catch (IOException ioException) {
+            logger.error("ioException: ", ioException);
         }
     }
 
@@ -84,10 +103,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 }
-
-// 1. 화이트 리스트 검증
-// 2. 토큰이 적절한지 검증
-// 3. 토큰앞에 Bearer 제거
-// 4. jti가 유효한지 검사
-// 5. 토큰이 만료되었는지 확인. 만료시, refreshToken을 통한 토큰 재발급 구현
-// 6. 토큰이 jti로 찾은 토큰과 맞는지 검증
